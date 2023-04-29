@@ -1,0 +1,127 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.search-btn {
+  background: #0099ff;
+  color: white;
+  font-family: Helvetica, sans-serif;
+  font-size: 20px;
+  padding: 10px 20px;
+  border-radius: 0 10px 10px 0;
+  border: 0 none;
+  margin-left: 5px;
+  cursor: pointer;
+}
+.search-box {
+  background: #eee;
+  padding: 10px;
+  font-family: Helvetica, sans-serif;
+  font-size: 20px;
+  border-radius: 10px 0 0 10px;
+  -moz-border-radius: 10px 0 0 10px;
+  -webkit-border-radius: 10px 0 0 10px;
+  -o-border-radius: 10px 0 0 10px;
+  border: 0 none;
+}
+.searchthis {
+  width: 100%;
+}
+.logo {
+  width: 0;
+}
+.input {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.images {
+  padding-bottom: 2em;
+  margin: auto 1em auto 1em;
+}
+.header {
+  height: 9vh;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  text-align: center;
+}
+.image-description {
+  font-family: Helvetica, sans-serif;
+  font-size: 20px;
+  padding-left: 0.5em;
+  cursor: pointer;
+}
+.author-description {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 0.5vw;
+  padding-bottom: 0.5vw;
+}
+.footer {
+  height: 4vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  bottom: 0;
+}
+.page-number {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  color: grey;
+  font-size: 30px;
+  padding-right: 10px;
+  cursor: pointer;
+}
+.page-number.current {
+  color: #0099ff;
+}
+.ripples {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (max-width: 1200px) {
+  .image-description {
+    font-size: calc(10px + (20 - 10) * ((100vw - 320px) / (1200 - 320)));
+    font-family: Helvetica, sans-serif;
+  }
+  .search-btn {
+    background: #0099ff;
+    color: white;
+    font-family: Helvetica, sans-serif;
+    font-size: calc(12px + (20 - 12) * ((100vw - 320px) / (1200 - 320)));
+    border-radius: 0 10px 10px 0;
+    border: 0 none;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  .search-box {
+    background: #eee;
+    font-family: Helvetica, sans-serif;
+    font-size: calc(12px + (20 - 12) * ((100vw - 320px) / (1200 - 320)));
+    border-radius: 10px 0 0 10px;
+    -moz-border-radius: 10px 0 0 10px;
+    -webkit-border-radius: 10px 0 0 10px;
+    -o-border-radius: 10px 0 0 10px;
+    border: 0 none;
+  }
+  .page-number {
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    color: grey;
+    font-size: calc(15px + (30 - 15) * ((100vw - 320px) / (1200 - 320)));
+    cursor: pointer;
+  }
+  .page-number.current {
+    color: #0099ff;
+  }
+}
