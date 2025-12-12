@@ -1,6 +1,9 @@
 export interface ImageDto {
   id: string;
   color: string;
+  width: number;
+  height: number;
+  blur_hash: string | null;
   urls: {
     raw: string;
     full: string;
