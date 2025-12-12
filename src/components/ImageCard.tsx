@@ -1,4 +1,5 @@
-import { Avatar } from "@mui/material";
+import React, { useState } from "react";
+import { Avatar, Box, Typography } from "@mui/material";
 import { ThumbUpRounded } from "@mui/icons-material";
 import { ImageDto } from "../dto";
 
@@ -6,50 +7,82 @@ interface ImageCardProps {
   image: ImageDto;
 }
 
-const ImageCard = ({ image }: ImageCardProps) => {
+const ImageCard = React.memo(({ image }: ImageCardProps) => {
+  const [isLoaded, setIsLoaded] = useState(false);
   const openLink = (url: string) => window.open(url, "_blank");
 
   const displayUsername =
-    image.user.username && image.user.username.length > 8
-      ? `${image.user.username.slice(0, 8)}...`
+    image.user.username && image.user.username.length > 10
+      ? `${image.user.username.slice(0, 10)}...`
       : image.user.username || "Anonymous";
 
   return (
     <div className="image-card-container">
-      <img
-        src={image.urls.regular}
-        alt={image.alt_description || "Unsplash image"}
-        className="masonry-image"
+      <div
         style={{
-          width: "100%",
-          display: "block",
+          backgroundColor: image.color || "#eee",
           borderRadius: 15,
+          overflow: "hidden",
           cursor: "pointer",
         }}
         onClick={() => openLink(image.links.download)}
-      />
+      >
+        <img
+          src={image.urls.small}
+          srcSet={`${image.urls.small} 1x, ${image.urls.regular} 2x`}
+          alt={image.alt_description || "Lumina image"}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setIsLoaded(true)}
+          style={{
+            width: "100%",
+            display: "block",
+            borderRadius: 15,
+
+            opacity: isLoaded ? 1 : 0,
+            transition: "opacity 0.3s ease-in-out",
+          }}
+        />
+      </div>
 
       <div className="author-description">
-        <div
-          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-          onClick={() => openLink(image.user.links.html)}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+            mt: 1,
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            openLink(image.user.links.html);
+          }}
         >
           <Avatar
-            sx={{ height: 32, width: 32, marginRight: 1 }}
-            src={image.user.profile_image?.large}
+            sx={{ height: 32, width: 32, mr: 1, bgcolor: image.color }}
+            src={image.user.profile_image?.medium}
           />
-          <h5 className="image-description">{displayUsername}</h5>
-        </div>
+          <Typography variant="subtitle1" fontWeight="600" noWrap>
+            {displayUsername}
+          </Typography>
+        </Box>
 
-        <div
-          style={{ display: "flex", alignItems: "center", marginLeft: "auto" }}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            ml: "auto",
+            opacity: 0.7,
+          }}
         >
-          <h5 className="image-description">{image.likes}</h5>
-          <ThumbUpRounded sx={{ marginLeft: 0.5, fontSize: 18 }} />
-        </div>
+          <Typography variant="subtitle1" fontWeight="bold">
+            {image.likes}
+          </Typography>
+          <ThumbUpRounded sx={{ ml: 0.5, fontSize: 18 }} />
+        </Box>
       </div>
     </div>
   );
-};
+});
 
 export default ImageCard;

@@ -1,9 +1,13 @@
 export interface ImageDto {
   id: string;
+  color: string;
   urls: {
+    raw: string;
     full: string;
     regular: string;
     small: string;
+    thumb: string;
+    small_s3: string;
   };
   user: {
     username: string;
@@ -12,9 +16,12 @@ export interface ImageDto {
     };
     profile_image: {
       large: string;
+      medium: string;
+      small: string;
     };
   };
   links: {
+    self: string;
     download: string;
   };
   likes: number;
@@ -22,11 +29,11 @@ export interface ImageDto {
 }
 
 export interface HeaderPropsDto {
-    onSearch: (query: string) => void;
+  onSearch: (query: string) => void;
 }
 
 export interface PaginationPropsDto {
-    page: number;
-    totalPages: number;
-    onPageChange: (newPage: number) => void;
+  page: number;
+  totalPages: number;
+  onPageChange: (newPage: number) => void;
 }
