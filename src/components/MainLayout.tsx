@@ -7,6 +7,7 @@ import { SearchOff, ArrowUpward } from "@mui/icons-material";
 import Header from "./Header";
 import ImageCard from "./ImageCard";
 import { useImageSearch } from "../hooks/useImageSearch";
+import ScrollToTop from "./ScrollToTop";
 
 const MainLayout = () => {
   const [hasSearched, setHasSearched] = useState(false);
@@ -133,6 +134,7 @@ const MainLayout = () => {
           </Button>
         </Box>
       )}
+      <ScrollToTop />
     </Box>
   );
 };
