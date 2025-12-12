@@ -3,71 +3,93 @@ import axios from "axios";
 import { ImageDto } from "../dto";
 
 const ACCESS_KEY = import.meta.env.VITE_ACCESS_KEY;
-const API_URL = "https://api.unsplash.com/search/photos";
+const API_URL_SEARCH = "https://api.unsplash.com/search/photos";
+const API_URL_FEED = "https://api.unsplash.com/photos";
 
 export const useImageSearch = () => {
   const [images, setImages] = useState<ImageDto[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  
+  const [mode, setMode] = useState<"feed" | "search">("feed");
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
   const [currentQuery, setCurrentQuery] = useState("");
+
+  const fetchFromApi = async (endpoint: string, params: any) => {
+    return axios.get(endpoint, {
+      params: { ...params, client_id: ACCESS_KEY, per_page: 20 },
+    });
+  };
+
+  const fetchEditorialFeed = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    setMode("feed");
+    setPage(1);
+    setCurrentQuery("");
+
+    try {
+      const { data } = await fetchFromApi(API_URL_FEED, { page: 1, order_by: "popular" });
+      setImages(data); // unsplash /photos returns an array directly, not data.results
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load feed.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   const searchImages = useCallback(async (query: string) => {
     if (!query) return;
-
     setIsLoading(true);
     setError(null);
+    setMode("search");
     setPage(1);
     setCurrentQuery(query);
 
     try {
-      const { data } = await axios.get(API_URL, {
-        params: { query, page: 1, per_page: 20, client_id: ACCESS_KEY },
-      });
-
+      const { data } = await fetchFromApi(API_URL_SEARCH, { query, page: 1 });
       setImages(data.results);
-      setTotalPages(data.total_pages);
     } catch (err) {
       console.error(err);
-      setError("Failed to fetch images.");
+      setError("Failed to search images.");
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   const loadMore = useCallback(async () => {
-    if (isLoading || page >= totalPages || !currentQuery) return;
-
+    if (isLoading) return;
     setIsLoading(true);
     const nextPage = page + 1;
 
     try {
-      const { data } = await axios.get(API_URL, {
-        params: {
-          query: currentQuery,
-          page: nextPage,
-          per_page: 20,
-          client_id: ACCESS_KEY,
-        },
-      });
+      let newImages: ImageDto[] = [];
 
-      setImages((prev) => [...prev, ...data.results]);
+      if (mode === "search") {
+        const { data } = await fetchFromApi(API_URL_SEARCH, { query: currentQuery, page: nextPage });
+        newImages = data.results;
+      } else {
+        const { data } = await fetchFromApi(API_URL_FEED, { page: nextPage, order_by: "popular" });
+        newImages = data;
+      }
+
+      setImages((prev) => [...prev, ...newImages]);
       setPage(nextPage);
     } catch (err) {
-      setError("Failed to load more images.");
+      setError("Failed to load more.");
     } finally {
       setIsLoading(false);
     }
-  }, [page, totalPages, currentQuery, isLoading]);
+  }, [page, mode, currentQuery, isLoading]);
 
-  return {
-    images,
-    isLoading,
-    error,
-    hasMore: page < totalPages,
-    searchImages,
-    loadMore,
+  return { 
+    images, 
+    isLoading, 
+    error, 
+    hasMore: true,
+    fetchEditorialFeed,
+    searchImages, 
+    loadMore 
   };
 };

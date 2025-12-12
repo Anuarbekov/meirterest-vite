@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { Ripples } from "@uiball/loaders";
 import { Box, Typography, Button } from "@mui/material";
@@ -12,9 +12,21 @@ import ScrollToTop from "./ScrollToTop";
 const MainLayout = () => {
   const [hasSearched, setHasSearched] = useState(false);
 
-  const { images, isLoading, error, hasMore, searchImages, loadMore } =
-    useImageSearch();
+  const {
+    images,
+    isLoading,
+    error,
+    hasMore,
+    searchImages,
+    loadMore,
+    fetchEditorialFeed,
+  } = useImageSearch();
 
+  useEffect(() => {
+    if (images.length === 0) {
+      fetchEditorialFeed();
+    }
+  }, []);
   const observer = useRef<IntersectionObserver>();
 
   const lastElementRef = useCallback(
@@ -32,6 +44,7 @@ const MainLayout = () => {
     },
     [isLoading, hasMore, loadMore]
   );
+
   const handleSearch = (newQuery: string) => {
     setHasSearched(true);
     searchImages(newQuery);
@@ -62,17 +75,6 @@ const MainLayout = () => {
     </Box>
   );
 
-  const renderEmptyState = () => (
-    <Box sx={{ textAlign: "center", mt: 10, opacity: 0.5 }}>
-      <Typography variant="h4" fontWeight="bold" color="text.secondary">
-        Ready to explore?
-      </Typography>
-      <Typography variant="body1">
-        Type something in the search bar above.
-      </Typography>
-    </Box>
-  );
-
   return (
     <Box sx={{ minHeight: "100vh", pb: 4 }}>
       <Header onSearch={handleSearch} />
@@ -87,7 +89,6 @@ const MainLayout = () => {
       )}
 
       <Box sx={{ px: { xs: 2, md: 3 } }}>
-        {!hasSearched && renderEmptyState()}
         {hasSearched && !isLoading && images.length === 0 && renderNoResults()}
         <ResponsiveMasonry
           columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1200: 4 }}
