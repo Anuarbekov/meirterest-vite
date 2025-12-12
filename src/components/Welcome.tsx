@@ -135,7 +135,7 @@ const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
             letterSpacing: "-0.05em",
           }}
         >
-          Lumina.
+          Luminna.
         </Typography>
 
         <Typography variant="h5" sx={{ mb: 3, color: "#fff", opacity: 0.9 }}>
