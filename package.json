@@ -17,6 +17,7 @@
     "@types/react-responsive-masonry": "^2.1.0",
     "@uiball/loaders": "^1.2.6",
     "axios": "^1.4.0",
+    "blurhash": "^2.0.5",
     "dot-env": "^0.0.1",
     "react": "^18.2.0",
     "react-blurhash": "^0.3.0",
